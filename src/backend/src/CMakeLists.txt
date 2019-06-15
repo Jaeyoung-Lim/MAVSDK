@@ -33,12 +33,12 @@ if(IOS)
 endif()
 
 if(IOS)
-    add_library(backend SHARED ${BACKEND_SOURCES})
+    add_library(mavsdk_backend SHARED ${BACKEND_SOURCES})
 else()
-    add_library(backend ${BACKEND_SOURCES})
+    add_library(mavsdk_backend ${BACKEND_SOURCES})
 endif()
 
-target_link_libraries(backend
+target_link_libraries(mavsdk_backend
     PRIVATE
     dronecode_sdk_action
     dronecode_sdk_calibration
@@ -54,7 +54,7 @@ target_link_libraries(backend
     ${COMPONENTS_PROTOGENS}
 )
 
-target_include_directories(backend
+target_include_directories(mavsdk_backend
     PRIVATE
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/core>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/plugins>
@@ -65,7 +65,7 @@ target_include_directories(backend
 )
 
 if(IOS)
-    set_target_properties(backend PROPERTIES
+    set_target_properties(mavsdk_backend PROPERTIES
         FRAMEWORK TRUE
         BUILD_WITH_INSTALL_RPATH TRUE
         INSTALL_NAME_DIR @rpath
@@ -74,22 +74,22 @@ if(IOS)
         MACOSX_FRAMEWORK_INFO_PLIST ${PROJECT_SOURCE_DIR}/backend/cmake/MacOSXFrameworkInfo.plist.in
     )
 else()
-    add_executable(backend_bin
+    add_executable(mavsdk_backend_bin
         dronecode_sdk_server.cpp
     )
 
-    target_link_libraries(backend_bin
+    target_link_libraries(mavsdk_backend_bin
         backend
         dronecode_sdk
     )
 
-    install(TARGETS backend_bin
+    install(TARGETS mavsdk_backend_bin
         EXPORT dronecode-sdk-targets
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         )
 
     if(BUILD_SHARED_LIBS)
-        install(TARGETS backend
+        install(TARGETS mavsdk_backend_bin
             EXPORT dronecode-sdk-targets
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
             )
